@@ -11,7 +11,7 @@ No build step, no dependencies, no server-side code, no database. Every screen i
 plain HTML/CSS/JS that runs in any modern browser.
 
 ```
-https://alexradf.github.io/Chariot-of-the-gods/
+https://alexradf.github.io/chariot-of-the-gods/
 ```
 
 > **Spoiler warning for Game Mothers.** These screens contain the Cronus crew's
@@ -68,7 +68,7 @@ Everything is optional and modular — run just the terminal, or the full kit.
 ## Screen 1 — Access Terminal (the mystery)
 
 ```
-https://alexradf.github.io/Chariot-of-the-gods/?id=8654
+https://alexradf.github.io/chariot-of-the-gods/?id=8654
                                                 └─ C. Reynolds, Chief of Security
 ```
 
@@ -117,7 +117,7 @@ or moving in the vents; give another **Clayton** and they read the Company's
 ## The front page
 
 ```
-https://alexradf.github.io/Chariot-of-the-gods/
+https://alexradf.github.io/chariot-of-the-gods/
 ```
 
 The bare site URL — no crew card on it — opens a plain way in to the kit: one
@@ -135,7 +135,7 @@ prop working as intended.
 ## Screen 2 — Crew Sheets (the players)
 
 ```
-https://alexradf.github.io/Chariot-of-the-gods/sheet/
+https://alexradf.github.io/chariot-of-the-gods/sheet/
 ```
 
 The players' side of the prop: the regenerated Montero crew who board the Cronus.
@@ -250,7 +250,7 @@ calls for it, and it overlays onto whichever character they're already playing.
 ## Screen 3 — Main Display · MU/TH/UR 6500 (iPad, landscape)
 
 ```
-https://alexradf.github.io/Chariot-of-the-gods/display/
+https://alexradf.github.io/chariot-of-the-gods/display/
 ```
 
 Leave it running in the middle of the table as the ship's computer. It has **two
@@ -324,7 +324,7 @@ full-screen); use the browser's own full-screen control if you want it edge to e
 ## Screen 4 — GM Control · self-destruct (phone, portrait)
 
 ```
-https://alexradf.github.io/Chariot-of-the-gods/control/
+https://alexradf.github.io/chariot-of-the-gods/control/
 ```
 
 Your off-fiction remote for the Main Display, and your **one GM console**: it
@@ -443,7 +443,7 @@ hidden corner fallback on the display covers you if the relay is unavailable.
 ## Screen 5 — Motion Tracker · M314 (phone, portrait)
 
 ```
-https://alexradf.github.io/Chariot-of-the-gods/tracker/
+https://alexradf.github.io/chariot-of-the-gods/tracker/
 ```
 
 Your handheld motion-tracker prop for the reveal moment: a sweeping scope with
@@ -632,7 +632,7 @@ their terminal. PNGs are handy for slides and screens; SVGs stay crisp at any
 print size.
 
 The codes are generated for the default Pages URL
-(`https://alexradf.github.io/Chariot-of-the-gods/`). **If you move to a custom
+(`https://alexradf.github.io/chariot-of-the-gods/`). **If you move to a custom
 domain, regenerate them** so the cards point at the new address:
 
 ```bash
