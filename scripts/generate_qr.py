@@ -22,7 +22,7 @@ import sys
 import segno
 
 # Default GitHub Pages project URL for this repo. Override via argv[1].
-DEFAULT_BASE = "https://alexradf.github.io/Chariot-of-the-gods/"
+DEFAULT_BASE = "https://alexradf.github.io/chariot-of-the-gods/"
 
 # id, slug, name, role, clearance  — mirrors CREW_DATA in index.html
 CREW = [
