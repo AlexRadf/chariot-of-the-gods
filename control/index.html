@@ -504,10 +504,18 @@ function flash(msg, cls){
   const f=$("#feed"); f.textContent=msg; f.className="feed "+(cls||"");
   clearTimeout(feedT); feedT=setTimeout(()=>{ f.textContent = armed?"ARMED":"STANDBY"; f.className="feed"; }, 2600);
 }
+/* One failure message for every cause made these impossible to tell apart at
+   the table, so say which it was: the relay answering with an error is a very
+   different problem from never reaching it at all. */
 function send(cmd, label){
   fetch("https://ntfy.sh/"+encodeURIComponent(room), { method:"POST", body:cmd })
-    .then(r=>{ if(!r.ok) throw 0; flash("▸ "+(label||cmd), "ok"); })
-    .catch(()=>flash("SEND FAILED — CHECK NETWORK", "bad"));
+    .then(r=>{
+      if(r.ok){ flash("▸ "+(label||cmd), "ok"); return; }
+      flash(r.status===429 ? "RATE LIMITED — WAIT A MOMENT"
+                           : "RELAY REFUSED — ERROR "+r.status, "bad");
+    })
+    .catch(()=>flash(navigator.onLine ? "CAN'T REACH RELAY — NTFY.SH BLOCKED?"
+                                      : "NO CONNECTION — USE IPAD CORNERS", "bad"));
 }
 
 /* -------------------- ACT IN PLAY --------------------

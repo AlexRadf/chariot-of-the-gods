@@ -184,9 +184,22 @@ section h2{ font-size:clamp(10px,1.5vw,13px); color:var(--amber); font-weight:40
   .grid{ grid-template-columns:1fr; grid-auto-rows:minmax(0,1fr); }
 }
 
-/* hidden corner hotspots — local self-destruct fallback if the relay is down */
-.hot{ position:fixed; bottom:0; width:16vw; height:16vh; z-index:84; }
-.hot.l{ left:0; } .hot.r{ right:0; }
+/* hidden corner hotspots — local self-destruct fallback if the relay is down.
+   touch-action/callout off: without them iOS treats the long press as the start
+   of a scroll or a text-callout, fires pointercancel part-way through, and the
+   hold never completes — the corner just looks dead. The glow is the only
+   feedback that the press registered; it ramps up over the hold and is gone the
+   moment you let go, so it stays invisible in normal play.
+   They also have to sit ABOVE the takeover (z-index 88) or the fallback can
+   only ever arm: the destruct screen covers both corners, so start and abort
+   stop responding exactly when you need them. Being above the boot screens too
+   is harmless — the handlers ignore a hold until the display has come up. */
+.hot{ position:fixed; bottom:0; width:16vw; height:16vh; z-index:92;
+  touch-action:none; -webkit-touch-callout:none; -webkit-user-select:none;
+  opacity:0; transition:opacity 0s; }
+.hot.holding{ opacity:1; transition:opacity .9s linear; }
+.hot.l{ left:0; background:radial-gradient(circle at 0 100%, rgba(240,178,62,.30), transparent 70%); }
+.hot.r{ right:0; background:radial-gradient(circle at 100% 100%, rgba(240,178,62,.30), transparent 70%); }
 
 /* -------- self-destruct takeover -------- */
 #destruct{ display:none; position:fixed; inset:0; z-index:88;
@@ -713,17 +726,34 @@ function handleCommand(cmd){
 
 /* ---------------- local fallback hotspots (long-press corners) ---------------- */
 function longpress(el, fn){
-  let tmr=null;
-  const down=()=>{ tmr=setTimeout(()=>{ fn(); }, 900); };
-  const up=()=>{ clearTimeout(tmr); };
-  el.addEventListener("pointerdown", down);
-  el.addEventListener("pointerup", up);
-  el.addEventListener("pointerleave", up);
-  el.addEventListener("pointercancel", up);
+  let tmr=null, sx=0, sy=0;
+  const stop=()=>{ clearTimeout(tmr); tmr=null; el.classList.remove("holding"); };
+  el.addEventListener("pointerdown", e=>{
+    sx=e.clientX; sy=e.clientY;
+    // capture so a finger that drifts off the corner keeps sending us events
+    // instead of silently handing them to whatever is underneath
+    try{ el.setPointerCapture(e.pointerId); }catch(err){}
+    el.classList.add("holding");
+    clearTimeout(tmr);
+    tmr=setTimeout(()=>{ stop(); fn(); }, 900);
+  });
+  // a real drag cancels; a few pixels of thumb-roll does not
+  el.addEventListener("pointermove", e=>{
+    if(tmr && Math.hypot(e.clientX-sx, e.clientY-sy) > 30) stop();
+  });
+  el.addEventListener("pointerup", stop);
+  el.addEventListener("pointercancel", stop);
 }
 // bottom-left: arm  <->  abort ;  bottom-right: start (if armed) / cut signal (if counting)
-longpress($("#hotL"), ()=>{ if(destState==="hidden") armDestruct(); else abortDestruct(); });
+// nothing doing until the display is actually up, so a stray press on the
+// tap-to-activate or diagnostic screen can't arm the ship behind them
+const displayUp = ()=> $("#scrn").classList.contains("on");
+longpress($("#hotL"), ()=>{
+  if(!displayUp()) return;
+  if(destState==="hidden") armDestruct(); else abortDestruct();
+});
 longpress($("#hotR"), ()=>{
+  if(!displayUp()) return;
   if(destState==="armed") startDestruct(300);
   else if(destState==="count") signalError();
 });
